@@ -1,0 +1,48 @@
+#!/bin/bash
+# This is a simple build script and will be executed on your CI system if 
+# available.  Otherwise it will execute while your application is stopped
+# before the deploy step.  This script gets executed directly, so it
+# could be python, php, ruby, etc.
+
+# bailout on first error
+set -e
+
+cd ~/app-root/runtime/
+
+# create dir to put all our stuff
+mkdir riak
+cd riak
+# handy variable
+BASEPATH=$PWD
+
+# get Riak
+wget http://downloads.basho.com.s3-website-us-east-1.amazonaws.com/riak/CURRENT/riak-1.2.1.tar.gz
+# get erlang
+wget http://www.erlang.org/download/otp_src_R15B03-1.tar.gz
+
+# unpack all
+tar -xzf riak-1.2.1.tar.gz
+tar -xzf otp_src_R15B03-1.tar.gz
+
+# remove to avoid hiting the quota
+rm riak-1.2.1.tar.gz
+rm otp_src_R15B03-1.tar.gz
+
+# build and install erlang
+cd ../../../otp_src_R15B03
+./configure --prefix=$BASEPATH/usr/ --disable-hipe --enable-smp-support --enable-threads --enable-kernel-poll  --enable-darwin-64bit
+make && make install
+
+# build Riak
+cd ../riak-1.2.1.tar.gz
+export PATH=$PATH:$BASEPATH/usr/bin/:$BASEPATH/usr/local/bin
+make && make rel
+
+cd rel/riak
+# change port and bind_address where openshift expects DIY apps to serve
+perl -p -i -e  's/8098/8080/' `find . -name "app.config"`
+perl -p -i -e  's/127.0.0.1/$OPENSHIFT_INTERNAL_IP/' `find . -name "app.config"`
+perl -p -i -e  's/127.0.0.1/$OPENSHIFT_INTERNAL_IP/' `find . -name "vm.args"`
+
+# start riak
+./bin/riak start
