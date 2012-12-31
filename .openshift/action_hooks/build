@@ -38,7 +38,7 @@ make && make install
 cd ..
 
 # build Riak
-cd riak-1.2.1.tar.gz
+cd riak-1.2.1
 export PATH=$PATH:$BASEPATH/usr/bin/:$BASEPATH/usr/local/bin
 make && make rel
 
