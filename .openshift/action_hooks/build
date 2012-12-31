@@ -29,12 +29,14 @@ rm riak-1.2.1.tar.gz
 rm otp_src_R15B03-1.tar.gz
 
 # build and install erlang
-cd ../../../otp_src_R15B03
+cd otp_src_R15B03
 ./configure --prefix=$BASEPATH/usr/ --disable-hipe --enable-smp-support --enable-threads --enable-kernel-poll  --enable-darwin-64bit
 make && make install
 
+cd ..
+
 # build Riak
-cd ../riak-1.2.1.tar.gz
+cd riak-1.2.1.tar.gz
 export PATH=$PATH:$BASEPATH/usr/bin/:$BASEPATH/usr/local/bin
 make && make rel
 
