@@ -32,7 +32,7 @@ rm otp_src_R15B03-1.tar.gz
 
 # build and install erlang
 cd otp_src_R15B03
-./configure --prefix=$BASEPATH/usr/ --disable-hipe --enable-smp-support --enable-threads --enable-kernel-poll  --enable-darwin-64bit
+./configure --prefix=$BASEPATH/usr/ --disable-hipe --enable-smp-support --enable-threads --enable-kernel-poll
 make && make install
 
 cd ..
