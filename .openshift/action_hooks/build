@@ -10,8 +10,10 @@ set -e
 cd ~/app-root/runtime/
 
 # create dir to put all our stuff
+rm -rf riak
 mkdir riak
 cd riak
+
 # handy variable
 BASEPATH=$PWD
 
