@@ -1,5 +1,7 @@
 # Riak for Red Hat OpenShift
 
+## This doesn't work yet :-(
+
 A work in progress
 
 Based on:
